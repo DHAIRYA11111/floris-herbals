@@ -1,34 +1,19 @@
 import React, { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { CartContext } from "../CartContext"; // NEW LOCATION
 
 const Wishlist = () => {
-  // Safe access to context in case it's loading
   const { wishlist = [], removeFromWishlist, addToCart } = useContext(CartContext) || {};
-
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
       <h2>❤️ My Wishlist</h2>
-      {wishlist.length === 0 ? (
-        <p>Your wishlist is empty.</p>
-      ) : (
-        <div style={{ display: "grid", gap: "15px" }}>
+      {wishlist.length === 0 ? <p>Your wishlist is empty.</p> : (
+        <div style={{ display: "grid", gap: "10px" }}>
           {wishlist.map((item) => (
             <div key={item._id} style={{ border: "1px solid #ddd", padding: "15px", borderRadius: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h4>{item.name}</h4>
               <div>
-                <h3>{item.name}</h3>
-                <p>₹{item.price}</p>
-              </div>
-              <div>
-                <button 
-                  onClick={() => addToCart(item)} 
-                  style={{ background: "#28a745", color: "white", border: "none", padding: "8px 12px", marginRight: "10px", borderRadius: "5px", cursor: "pointer" }}>
-                  Move to Cart
-                </button>
-                <button 
-                  onClick={() => removeFromWishlist(item._id)} 
-                  style={{ background: "#dc3545", color: "white", border: "none", padding: "8px 12px", borderRadius: "5px", cursor: "pointer" }}>
-                  Remove
-                </button>
+                <button onClick={() => addToCart(item)} style={{ marginRight: "10px", background: "#28a745", color: "#fff", border: "none", padding: "5px 10px", borderRadius: "4px" }}>Add to Cart</button>
+                <button onClick={() => removeFromWishlist(item._id)} style={{ background: "#dc3545", color: "#fff", border: "none", padding: "5px 10px", borderRadius: "4px" }}>Remove</button>
               </div>
             </div>
           ))}
@@ -37,5 +22,4 @@ const Wishlist = () => {
     </div>
   );
 };
-
 export default Wishlist;
