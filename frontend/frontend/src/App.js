@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import Wishlist from "./pages/Wishlist";
-import { CartProvider } from "./CartContext"; // NEW LOCATION
+import { CartProvider } from "./CartContext"; 
 
 function App() {
   return (

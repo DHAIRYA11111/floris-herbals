@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { CartContext } from "../CartContext"; // NEW LOCATION
+import { CartContext } from "../CartContext";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
