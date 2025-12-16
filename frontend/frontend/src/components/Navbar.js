@@ -1,22 +1,56 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { CartContext } from "../CartContext"; // NEW LOCATION
+import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 
 const Navbar = () => {
-  const { cart = [], wishlist = [] } = useContext(CartContext) || {};
-  const navigate = useNavigate();
-  const handleLogout = () => { localStorage.removeItem("userInfo"); navigate("/login"); };
+  // Safe check for cart to prevent crashes
+  const { cart } = useContext(CartContext) || { cart: [] };
+
+  const navStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "1rem 2rem",
+    backgroundColor: "#1a1a1a",
+    color: "#fff",
+    position: "sticky",
+    top: 0,
+    zIndex: 100
+  };
+
+  const linkStyle = {
+    color: "#fff",
+    textDecoration: "none",
+    fontSize: "1rem",
+    marginLeft: "20px",
+    transition: "color 0.3s"
+  };
 
   return (
-    <nav style={{ background: "#333", color: "#fff", padding: "15px 30px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, zIndex: 100 }}>
-      <Link to="/" style={{ color: "#fff", fontSize: "1.5rem", fontWeight: "bold", textDecoration: "none" }}>🌿 Floris Herbals</Link>
-      <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>Home</Link>
-        <Link to="/wishlist" style={{ color: "#fff", textDecoration: "none" }}>❤️ Wishlist ({wishlist.length})</Link>
-        <Link to="/cart" style={{ color: "#fff", textDecoration: "none" }}>🛒 Cart ({cart.reduce((a,c)=>a+c.qty,0)})</Link>
-        <button onClick={handleLogout} style={{ background: "transparent", border: "1px solid #fff", color: "#fff", padding: "5px 10px", borderRadius: "5px" }}>Logout</button>
+    <nav style={navStyle}>
+      {/* Brand Name */}
+      <Link to="/" style={{ ...linkStyle, fontSize: "1.5rem", fontWeight: "bold", marginLeft: 0 }}>
+        🌿 Floris Herbals
+      </Link>
+
+      {/* Navigation Links */}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Link to="/" style={linkStyle}>Home</Link>
+        
+        {/* --- NEW CATEGORIES --- */}
+        <Link to="/category/pooja-oils" style={linkStyle}>Pooja Oils</Link>
+        <Link to="/category/soap-fragrances" style={linkStyle}>Soap Fragrances</Link>
+        <Link to="/category/raw-materials" style={linkStyle}>Raw Materials</Link>
+        {/* ---------------------- */}
+
+        <Link to="/wishlist" style={linkStyle}>❤️ Wishlist</Link>
+        
+        <Link to="/cart" style={linkStyle}>
+          🛒 Cart {cart && cart.length > 0 && <span>({cart.length})</span>}
+        </Link>
       </div>
     </nav>
   );
 };
+
 export default Navbar;
