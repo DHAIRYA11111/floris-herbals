@@ -1,59 +1,23 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-
 export const CartContext = createContext();
-
-// This helper was missing before, adding it now
-export const useCart = () => {
-  return useContext(CartContext);
-};
+export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
-  // Load from localStorage or start empty
-  const [cart, setCart] = useState(() => {
-    try {
-      const saved = localStorage.getItem("cart");
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) { return []; }
-  });
-
-  const [wishlist, setWishlist] = useState(() => {
-    try {
-      const saved = localStorage.getItem("wishlist");
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) { return []; }
-  });
+  const [cart, setCart] = useState(() => JSON.parse(localStorage.getItem("cart") || "[]"));
+  const [wishlist, setWishlist] = useState(() => JSON.parse(localStorage.getItem("wishlist") || "[]"));
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [cart, wishlist]);
 
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item._id === product._id);
-      if (existing) {
-        return prev.map((item) =>
-          item._id === product._id ? { ...item, qty: item.qty + 1 } : item
-        );
-      }
-      return [...prev, { ...product, qty: 1 }];
-    });
-  };
-
-  const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item._id !== id));
-  };
-
-  const addToWishlist = (product) => {
-    setWishlist((prev) => {
-      if (prev.find((item) => item._id === product._id)) return prev;
-      return [...prev, product];
-    });
-  };
-
-  const removeFromWishlist = (id) => {
-    setWishlist((prev) => prev.filter((item) => item._id !== id));
-  };
+  const addToCart = (p) => setCart(prev => {
+    const ex = prev.find(x => x._id === p._id);
+    return ex ? prev.map(x => x._id === p._id ? {...x, qty: x.qty+1} : x) : [...prev, {...p, qty: 1}];
+  });
+  const removeFromCart = (id) => setCart(prev => prev.filter(x => x._id !== id));
+  const addToWishlist = (p) => setWishlist(prev => prev.find(x => x._id === p._id) ? prev : [...prev, p]);
+  const removeFromWishlist = (id) => setWishlist(prev => prev.filter(x => x._id !== id));
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, wishlist, addToWishlist, removeFromWishlist }}>
